@@ -21,7 +21,7 @@
   --line:      rgba(255,255,255,.09);
   --text:      #f4f1ec;
   --muted:     #b9b3a8;
-  --red:       #d3262f;   /* شارة "خيار الكثر طلبا" */
+  --red:       #d3262f;   /* شارة "خيار الشيف" */
   --green:     #1f8a3a;   /* شارة "جديد" */
 }
 
@@ -166,6 +166,9 @@ footer b{font-weight:500;letter-spacing:1px;direction:ltr}
 .old-price{color:var(--muted);text-decoration:line-through;font-size:15px}
 .offer-until{font-size:13px;color:var(--muted)}
 
+.offer-banner{grid-column:1/-1;border:1px solid var(--gold-soft);border-radius:14px;overflow:hidden;background:var(--card)}
+.offer-banner img{width:100%;height:auto;display:block}
+.offer .add-btn{align-self:flex-start;margin-top:6px}
 /* ---------- معلومات المطعم ---------- */
 .info{max-width:1000px;margin:56px auto 0;padding:0 18px;scroll-margin-top:70px}
 .info-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px 22px}
@@ -300,7 +303,7 @@ const CONFIG = {
   tagline:   "مذاق استثنائي في كل لقمة",
   logo:      "",                       // مسار الشعار مثل: "images/logo.png" (اتركه فارغاً لعرض اسم نصي)
   logoText:  "اسم المطعم",             // يظهر إذا لم يوجد شعار
-  heroImage: "banar.jpeg",                       // صورة الغلاف مثل: "images/hero.jpg"
+  heroImage: "images/banar.jpeg",                       // صورة الغلاف مثل: "images/hero.jpg"
   footer:    "f9.my",             // نص الفوتر (موقع/إنستغرام)
 
   currency:  "ر.س",
@@ -313,13 +316,18 @@ const CONFIG = {
     enabled:  true,                    // true = إظهار القسم | false = إخفاؤه بالكامل
     title:    "العروض",
     subtitle: "وفّر أكثر مع عروضنا الحالية",
+    // كل عرض له نوع من اثنين:
+    //   type: "banner"  → صورة عرضية فقط (بدون نص أو زر)
+    //   type: "product" → منتج بزر "أضف" للسلة (يحتاج title و newPrice)
     items: [
+      { type: "banner", image: "offer-banner.jpg" },
       {
+        type: "banner",
         title: "عرض الوجبة المزدوجة",
         desc:  "برجر دبل + بطاطس + مشروب غازي.",
-        image: "offer1.jpg",   // صورة العرض (اتركها "" لعرض بدون صورة)
+        image: "offer1.jpg",    // اختياري
         badge: "وفّر 15%",             // اختياري
-        newPrice: 39,                  // السعر بعد الخصم (اختياري)
+        newPrice: 39,                  // سعر العرض (يُضاف للسلة بهذا السعر)
         oldPrice: 46,                  // السعر قبل الخصم (اختياري)
         until: "ينتهي نهاية الأسبوع"   // اختياري
       }
@@ -486,17 +494,26 @@ if (O && O.enabled && O.items && O.items.length) {
     `<div class="title-row"><h2>${O.title || 'العروض'}</h2></div>${O.subtitle ? `<p>${O.subtitle}</p>` : ''}`));
   const g = el('div', 'offers-grid');
   O.items.forEach(o => {
+    if (o.type === 'banner') {
+      if (!o.image) return;
+      const c = el('div', 'offer-banner');
+      const img = new Image(); img.src = o.image; img.alt = o.title || 'عرض'; img.loading = 'lazy';
+      img.onerror = () => c.remove();
+      c.append(img); g.append(c); return;
+    }
+    o.name = o.title; o.price = o.newPrice; o.__id = ++uid; items[o.__id] = o;
     const c = el('article', 'offer');
     if (o.image) { const m = el('div', 'offer-media'); m.append(media({ image: o.image, name: o.title, icon: '🎁' })); c.append(m); }
     const b = el('div', 'offer-body');
     if (o.badge) b.append(el('span', 'badge chef', o.badge));
     b.append(el('h3', '', o.title));
     if (o.desc) b.append(el('p', 'desc', o.desc));
-    if (o.newPrice != null) {
+    if (CONFIG.showPrices && o.newPrice != null) {
       b.append(el('div', 'offer-prices',
         priceHtml(o.newPrice) + (o.oldPrice != null ? `<span class="old-price">${o.oldPrice} ${CONFIG.currency}</span>` : '')));
     }
     if (o.until) b.append(el('div', 'offer-until', o.until));
+    if (cartOn && o.newPrice != null) b.append(addBtn(o));
     c.append(b); g.append(c);
   });
   sec.append(g); main.prepend(sec);
