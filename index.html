@@ -21,7 +21,7 @@
   --line:      rgba(255,255,255,.09);
   --text:      #f4f1ec;
   --muted:     #b9b3a8;
-  --red:       #d3262f;   /* شارة "خيار الشيف" */
+  --red:       #d3262f;   /* شارة "خيار الكثر طلبا" */
   --green:     #1f8a3a;   /* شارة "جديد" */
 }
 
@@ -153,6 +153,44 @@ footer{
 footer::before,footer::after{content:"";height:1px;width:min(110px,18vw);background:var(--gold-soft)}
 footer b{font-weight:500;letter-spacing:1px;direction:ltr}
 
+
+/* ---------- العروض ---------- */
+.offers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.offer{background:var(--card);border:1px solid var(--gold-soft);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.offer-media{position:relative;aspect-ratio:16/9}
+.offer-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.offer .badge{transform:none}
+.offer h3{font-size:21px;font-weight:700;line-height:1.35}
+.offer .desc{color:var(--muted);font-size:15px}
+.offer-prices{display:flex;align-items:baseline;gap:10px;margin-top:auto;padding-top:6px}
+.old-price{color:var(--muted);text-decoration:line-through;font-size:15px}
+.offer-until{font-size:13px;color:var(--muted)}
+
+/* ---------- معلومات المطعم ---------- */
+.info{max-width:1000px;margin:56px auto 0;padding:0 18px;scroll-margin-top:70px}
+.info-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px 22px}
+.info-row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line)}
+.info-row:last-child{border-bottom:0}
+.info-ic{flex:none;width:40px;height:40px;border:1px solid var(--gold-soft);border-radius:50%;display:grid;place-items:center;color:var(--gold)}
+.info-ic svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.info-main{flex:1;min-width:0}
+.info-label{font-size:13px;color:var(--muted)}
+.info-val{font-weight:600;font-size:16px}
+.info-val a{color:inherit;text-decoration:none}
+.info-val.ltr{direction:ltr;unicode-bidi:plaintext;text-align:right}
+.hours{margin-top:4px;display:grid;gap:6px;max-width:380px}
+.hours div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px}
+.hours span:first-child{white-space:nowrap}
+.hours span:last-child{color:var(--muted);white-space:nowrap;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600;border:1px solid var(--gold);color:var(--gold)}
+.chip.off{border-color:var(--line);color:var(--muted);text-decoration:line-through;font-weight:500}
+.chip.off small{text-decoration:none;font-size:12px}
+.link-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.link-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-weight:600;font-size:14px;text-decoration:none;transition:background .2s,color .2s}
+.link-btn:hover,.link-btn:active{background:var(--gold);color:#111}
+.link-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
 /* ---------- القائمة الجانبية + السلة ---------- */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
 .scrim.on{opacity:1;pointer-events:auto}
@@ -184,6 +222,14 @@ footer b{font-weight:500;letter-spacing:1px;direction:ltr}
 .cart-total{display:flex;justify-content:space-between;margin:14px 0 12px;font-weight:700;font-size:18px}
 .send{width:100%;padding:14px;border-radius:12px;background:var(--gold);color:#111;font-weight:700;font-size:17px}
 .send[disabled]{opacity:.4;cursor:not-allowed}
+
+/* اختيار طريقة الاستلام في السلة */
+.order-type{display:flex;gap:8px;margin-top:12px}
+.opt{flex:1;padding:10px 8px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14px;color:var(--muted);transition:border-color .2s,color .2s,background .2s}
+.opt.on{border-color:var(--gold);color:var(--gold);background:rgba(232,169,58,.08)}
+.order-note{font-size:13px;color:var(--gold);margin-top:8px;text-align:center}
+.cart-fee{display:flex;justify-content:space-between;margin-top:12px;font-size:15px;color:var(--muted)}
+.info-note{font-size:13px;color:var(--muted);margin-top:8px}
 
 /* ---------- الجوال ---------- */
 @media (max-width:640px){
@@ -228,6 +274,8 @@ footer b{font-weight:500;letter-spacing:1px;direction:ltr}
 
 <main id="menu"></main>
 
+<section class="info" id="info" hidden></section>
+
 <footer><b id="footerText"></b></footer>
 
 <div class="scrim" id="scrim"></div>
@@ -235,6 +283,9 @@ footer b{font-weight:500;letter-spacing:1px;direction:ltr}
 <aside class="cart" id="cart" aria-label="سلة الطلب">
   <div class="cart-head"><h4>طلبك</h4><button class="icon-btn" id="cartClose" aria-label="إغلاق"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="cart-list" id="cartList"></div>
+  <div class="order-type" id="orderType"></div>
+  <div class="order-note" id="orderNote" hidden></div>
+  <div class="cart-fee" id="cartFee" hidden><span>رسوم التوصيل</span><span id="feeVal"></span></div>
   <div class="cart-total"><span>الإجمالي</span><span id="cartTotal"></span></div>
   <button class="send" id="sendBtn">إرسال الطلب عبر واتساب</button>
 </aside>
@@ -257,6 +308,41 @@ const CONFIG = {
   whatsapp:  "966597262948",
   showPrices: true,
 
+  /* ---------- قسم العروض (يظهر أعلى القائمة) ---------- */
+  offers: {
+    enabled:  true,                    // true = إظهار القسم | false = إخفاؤه بالكامل
+    title:    "العروض",
+    subtitle: "وفّر أكثر مع عروضنا الحالية",
+    items: [
+      {
+        title: "عرض الوجبة المزدوجة",
+        desc:  "برجر دبل + بطاطس + مشروب غازي.",
+        image: "images/offer1.jpg",   // صورة العرض (اتركها "" لعرض بدون صورة)
+        badge: "وفّر 15%",             // اختياري
+        newPrice: 39,                  // السعر بعد الخصم (اختياري)
+        oldPrice: 46,                  // السعر قبل الخصم (اختياري)
+        until: "ينتهي نهاية الأسبوع"   // اختياري
+      }
+    ]
+  },
+
+  /* ---------- معلومات المطعم (أسفل الصفحة) — اترك أي حقل فارغاً ليختفي ---------- */
+  info: {
+    phone:    "0597262948",
+    location: "جدة، حي ... ، شارع ...",
+    hours: [                           // أضف أو احذف الأسطر كما تشاء
+      { days: "السبت – الخميس", time: "12:00 ظ – 12:00 ص" },
+      { days: "الجمعة",         time: "2:00 م – 12:00 ص" }
+    ],
+    delivery: true,                    // التوصيل:  true = متاح | false = غير متاح
+    pickup:   true,                    // الاستلام من الفرع: true = متاح | false = غير متاح
+    deliveryFee:  10,                  // رسوم التوصيل (تُضاف على إجمالي الطلب) — 0 = مجاني
+    deliveryNote: "التوصيل داخل الحي فقط",   // ملاحظة تظهر للعميل عند اختيار التوصيل (اختياري)
+    mapsUrl:   "https://maps.google.com/?q=",   // رابط Google Maps
+    instagram: "",                     // اسم الحساب أو الرابط الكامل
+    tiktok:    ""                      // اسم الحساب أو الرابط الكامل
+  },
+
   categories: [
     {
       id: "burger", title: "برجر", subtitle: "مذاقات غنية ومكونات طازجة",
@@ -268,7 +354,7 @@ const CONFIG = {
           image: "duble.jpeg",                 // مثل: "images/double.jpg"
           icon: "🍔",                // يظهر مؤقتاً إذا لم توجد صورة
           price: 32,
-          badge: { text: "الأكثر طلباً", type: "chef" },   // chef | new | hot — أو احذف السطر
+          badge: { text: "خيار الشيف", type: "chef" },   // chef | new | hot — أو احذف السطر
           tags: [
             { icon: "🍞", label: "خبز محمص" },
             { icon: "🧅", label: "بصل مكرمل" },
@@ -392,6 +478,66 @@ CONFIG.categories.forEach(cat => {
   drawer.insertAdjacentHTML('beforeend', `<a href="#${cat.id}">${cat.title}</a>`);
 });
 
+/* ---------- قسم العروض ---------- */
+const O = CONFIG.offers;
+if (O && O.enabled && O.items && O.items.length) {
+  const sec = el('section', 'section'); sec.id = 'offers';
+  sec.append(el('div', 'section-head',
+    `<div class="title-row"><h2>${O.title || 'العروض'}</h2></div>${O.subtitle ? `<p>${O.subtitle}</p>` : ''}`));
+  const g = el('div', 'offers-grid');
+  O.items.forEach(o => {
+    const c = el('article', 'offer');
+    if (o.image) { const m = el('div', 'offer-media'); m.append(media({ image: o.image, name: o.title, icon: '🎁' })); c.append(m); }
+    const b = el('div', 'offer-body');
+    if (o.badge) b.append(el('span', 'badge chef', o.badge));
+    b.append(el('h3', '', o.title));
+    if (o.desc) b.append(el('p', 'desc', o.desc));
+    if (o.newPrice != null) {
+      b.append(el('div', 'offer-prices',
+        priceHtml(o.newPrice) + (o.oldPrice != null ? `<span class="old-price">${o.oldPrice} ${CONFIG.currency}</span>` : '')));
+    }
+    if (o.until) b.append(el('div', 'offer-until', o.until));
+    c.append(b); g.append(c);
+  });
+  sec.append(g); main.prepend(sec);
+  drawer.querySelector('h4').insertAdjacentHTML('afterend', `<a href="#offers">${O.title || 'العروض'}</a>`);
+}
+
+/* ---------- معلومات المطعم ---------- */
+(function(){
+  const I = CONFIG.info; if (!I) return;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ic = {
+    phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    pin:   '<path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    bike:  '<circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17l3-7h5l4 7M9 10l-1-3H6M14 10l-1.5-3H11"/>',
+    map:   '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>',
+    insta: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".8"/>',
+    tiktok:'<path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5M14 4c.4 2.3 1.9 3.800 4.500 4"/>'
+  };
+  const svg = k => `<svg viewBox="0 0 24 24">${ic[k]}</svg>`;
+  const row = (k, label, inner) =>
+    `<div class="info-row"><span class="info-ic">${svg(k)}</span><div class="info-main"><div class="info-label">${label}</div>${inner}</div></div>`;
+  const social = (v, base) => /^https?:\/\//i.test(v) ? v : base + v.replace(/^@/, '');
+
+  let rows = '';
+  if (I.phone) rows += row('phone', 'رقم الهاتف',
+    `<div class="info-val ltr"><a href="tel:${esc(I.phone.replace(/[^\d+]/g, ''))}">${esc(I.phone)}</a></div>`);
+  if (I.location) rows += row('pin', 'الموقع', `<div class="info-val">${esc(I.location)}</div>`);
+  if (I.hours && I.hours.length) rows += row('clock', 'أوقات العمل',
+    `<div class="hours">${I.hours.map(h => `<div><span>${esc(h.days)}</span><span>${esc(h.time)}</span></div>`).join('')}</div>`);
+  let links = '';
+  if (I.mapsUrl)   links += `<a class="link-btn" href="${esc(I.mapsUrl)}" target="_blank" rel="noopener">${svg('map')}افتح في الخريطة</a>`;
+  if (I.instagram) links += `<a class="link-btn" href="${esc(social(I.instagram, 'https://instagram.com/'))}" target="_blank" rel="noopener">${svg('insta')}إنستغرام</a>`;
+  if (I.tiktok)    links += `<a class="link-btn" href="${esc(social(I.tiktok, 'https://www.tiktok.com/@'))}" target="_blank" rel="noopener">${svg('tiktok')}تيك توك</a>`;
+  if (links) rows += row('map', 'روابط', `<div class="link-row">${links}</div>`);
+
+  if (!rows) return;
+  const box = $('info'); box.innerHTML = `<div class="info-card">${rows}</div>`; box.hidden = false;
+  drawer.insertAdjacentHTML('beforeend', '<a href="#info">معلومات المطعم</a>');
+})();
+
 /* الهيدر يتحول عند التمرير */
 const bar = $('topbar');
 const onScroll = () => bar.classList.toggle('solid', scrollY > 120);
@@ -408,6 +554,12 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
 
 /* السلة */
 const basket = {};
+const INFO = CONFIG.info || {};
+const MODES = [];
+if (INFO.pickup)   MODES.push({ id: 'pickup',   label: 'استلام من الفرع' });
+if (INFO.delivery) MODES.push({ id: 'delivery', label: 'توصيل' });
+let mode = MODES.length ? MODES[0].id : null;
+const feeNow = () => (mode === 'delivery' ? (INFO.deliveryFee || 0) : 0);
 function addToCart(id){ basket[id] = (basket[id] || 0) + 1; updateCount(); }
 function updateCount(){
   const n = Object.values(basket).reduce((a, b) => a + b, 0);
@@ -428,6 +580,19 @@ function renderCart(){
     q.append(plus, el('span', '', basket[id]), minus);
     row.append(q); list.append(row);
   });
+  /* طريقة الاستلام + الرسوم */
+  const ot = $('orderType'); ot.innerHTML = ''; ot.hidden = !MODES.length;
+  MODES.forEach(m => {
+    const b = el('button', 'opt' + (m.id === mode ? ' on' : ''), m.label);
+    b.setAttribute('aria-pressed', m.id === mode);
+    b.onclick = () => { mode = m.id; renderCart(); };
+    ot.append(b);
+  });
+  const note = $('orderNote');
+  note.hidden = !(mode === 'delivery' && INFO.deliveryNote); note.textContent = INFO.deliveryNote || '';
+  const fee = feeNow(); total += fee;
+  $('cartFee').hidden = !(mode === 'delivery' && fee && CONFIG.showPrices && ids.length);
+  $('feeVal').textContent = money(fee);
   $('cartTotal').textContent = CONFIG.showPrices ? money(total) : '';
   $('sendBtn').disabled = !ids.length;
 }
@@ -436,7 +601,14 @@ $('sendBtn').onclick = () => {
     const it = items[id]; return `• ${it.name} × ${basket[id]}` + (CONFIG.showPrices && it.price ? ` — ${money(it.price * basket[id])}` : '');
   });
   if (!lines.length) return;
-  const msg = `مرحباً، أود طلب:\n${lines.join('\n')}` + (CONFIG.showPrices ? `\nالإجمالي: ${$('cartTotal').textContent}` : '');
+  const m = MODES.find(x => x.id === mode);
+  let msg = `مرحباً، أود طلب:\n${lines.join('\n')}`;
+  if (m) msg += `\n\nطريقة الاستلام: ${m.label}`;
+  if (mode === 'delivery' && INFO.deliveryNote) msg += ` (${INFO.deliveryNote})`;
+  if (CONFIG.showPrices) {
+    if (mode === 'delivery' && feeNow()) msg += `\nرسوم التوصيل: ${money(feeNow())}`;
+    msg += `\nالإجمالي: ${$('cartTotal').textContent}`;
+  }
   window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 </script>
